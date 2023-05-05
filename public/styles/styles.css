@@ -1,0 +1,174 @@
+header {
+    background: #E0B0FF;
+}
+body {
+    margin: 0;
+    font-family: 'Lora', serif;
+}
+.logo {
+    margin-right: 10px;
+    width: 50px;
+}
+.logo-title {
+    display: flex;
+    margin: 0 auto;
+    width: 70%;
+    padding: 10px 0;
+    color: #ffffff;
+    justify-content: center;
+}
+.logo{
+    display: block;
+}
+
+section {
+    margin: 0 auto;
+    width: 70%;
+}
+
+.create-img {
+    width: 40px;
+}
+
+ul li {
+    list-style-type: none;
+}
+.note-title {
+    font-size: 24px;
+    font-weight: 700;
+}
+.note {
+    text-decoration: none;
+    border: 1px solid #FFFFCC;
+    display: block;
+    width: 340px;
+    background: #FFFFCC;
+    border-radius: 20px;
+    padding: 20px;
+    color: #a057cd;
+    margin-bottom: 20px;
+}
+.note-form {
+    margin: 20px auto;
+    width: 550px;
+
+}
+.note-form form {
+    width: 80%;
+    margin: 0 auto;
+}
+.note-form input {
+    font-size: 26px;
+    font-weight: 800;
+}
+.note-form input, .note-form textarea {
+    background: none;
+    border: none;
+    border-bottom: 2px solid #a057cd;
+    width: 100%;
+    color: #a057cd;
+}
+.note-form textarea {
+    margin-top: 20px;
+}
+.note-title {
+    font-size: 26px;
+    margin: 0;
+}
+.button-img {
+    background-size: cover;
+    width: 48px;
+    border: none;
+    height: 48px;
+    background-color: white;
+    cursor: pointer;
+}
+.delete {
+    background-image: url(/images/icons8-trash.svg);
+    margin: auto;
+}
+.view {
+    margin: 20px auto;
+    width: 550px;
+}
+.view h1 {
+    font-size: 26px;
+}
+.view h1, .view p {
+    width: 80%;
+    margin: 0 auto;
+}
+.update, .create {
+    background-color: #FFFFCC;
+    width: 30px;
+    height: 30px;
+}
+.update {
+    background-image: url(/images/icons8-refresh.svg);
+}
+.create {
+    background-image: url(/images/icons8-tick.svg);
+}
+.flex {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.date {
+    font-style: italic;
+}
+
+.section-title {
+    font-size: 36px;
+    color: #a057cd;
+}
+
+.create-button {
+    height: 40px;
+    width: 40px;
+    display: block;
+}
+
+.home {
+    cursor: pointer;
+    margin-top: 20px;
+    padding: 15px 10px;
+    border: 1px solid bisque;
+    background: bisque;
+    border-radius: 6px;
+    width: 150px;
+    text-align: center;
+    font-size: 20px;
+}
+
+.home a {
+    width: 150px;
+    display: block;
+    text-decoration: none;
+    font-weight: 600;
+    color: #9141c5;
+}
+
+.home-btn {
+    width: 44px;
+}
+
+.btns {
+    width: 100px;
+    align-items: stretch;
+}
+
+input[type=checkbox] {
+    width: 20px;
+    margin-top: 20px;
+}
+
+label {
+    font-size: 18px;
+}
+
+.dueDate {
+    font-style: normal;
+}

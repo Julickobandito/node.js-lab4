@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <%- include('head'); %>
+    <title>Note Form</title>
+</head>
+<body>
+<%- include('header'); %>
+<section>
+    <div class="flex">
+<!--        deleting note using method-override middleware (POST -> DELETE)-->
+        <a target="_blank" href="/entities/noteIndex/view"><img src="/images/icons8-share.svg" alt="share"></a>
+<!--        <a href="/entities"><img class="home-btn" src="/images/home.png" alt="share"></a>-->
+        <form action="/entities/<%= noteIndex %>?_method=DELETE" method="POST" id="delete-note-form" data-note-id="<%= noteIndex %>">
+            <button class="button-img delete" type="submit"></button>
+        </form>
+    </div>
+    <div class="note note-form">
+<!--        updating note using method-override middleware (POST -> PUT)-->
+        <form action="/entities/<%= noteIndex %>?_method=PUT" method="POST" id="update-note-form" data-note-id="<%= noteIndex %>">
+            <% attributes.forEach((attribute) => {
+            if (attribute.tag === "input") {%>
+            <input type="<%=attribute.attributes.type%>" name="<%=attribute.name%>" id="create-<%=attribute.name%>"
+                   value="<%= entity[attribute.name] %>"
+                   <%if(attribute.attributes.type !== "checkbox"){%>placeholder="<%=attribute.name%>" required<%}%>
+                   <%if(attribute.attributes.type === "checkbox" && entity[attribute.name]){%>checked<%}%>>
+                   <%if(attribute.attributes.type === "checkbox"){%><label for="create-<%=attribute.name%>">The task is completed</label><%}%>
+            <br>
+            <%} else if (attribute.tag === "textarea") {%>
+            <textarea placeholder="Type here.." name="<%=attribute.name%>" id="create-<%=attribute.name%>" required><%= entity[attribute.name] %></textarea>
+            <br>
+            <%}
+            });%>
+            <div class="flex">
+                <button class="button-img update" type="submit"></button>
+                <p class="date"><%= entity.date %></p>
+                <p class="date"><%= entity.time %></p>
+            </div>
+        </form>
+    </div>
+
+</section>
+<script src="/js/entity-form.js"></script>
+<script>
+    const _type = '<%= entity.type %>';
+    const _attributes = <%- attributes_names %>;
+</script>
+</body>
+</html>

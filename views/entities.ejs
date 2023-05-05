@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <%- include('head'); %>
+    <title>Notes</title>
+</head>
+    <body>
+        <%- include('header'); %>
+        <section>
+            <div class="flex">
+                <h1 class="section-title"><%= typeName %>s</h1>
+                <div class="flex btns">
+                    <a href="/entities"><img class="home-btn" src="/images/home.png" alt="share"></a>
+                    <a class="create-button" href="/entities/new/<%= type %>"><img class="create-img" src="/images/writing.png" alt="create"></a>
+                </div>
+            </div>
+
+            <div class="flex">
+                <% filtered_entities.forEach((entity) => { %>
+                    <a class="note" href="/entities/<%= entity.id %>">
+                        <h3 class="note-title"><%= entity.title.slice(0, 20) %><% if(entity.title.length > 20) { %>...<% } %></h3>
+                        <p><%= entity.content.slice(0, 30) %><% if(entity.content.length > 30) { %>...<% } %></p>
+                        <p class="date dueDate"><b><%= entity.dueDate %></b></p>
+                        <p class="date dueDate"><b><%= entity.eventDate %></b></p>
+                        <p class="date"><%= entity.date %> <%= entity.time %></p>
+<!--                        <p class="date"></p>-->
+
+                    </a>
+                <% }); %>
+            </div>
+        </section>
+
+<!--    <script src="/js/front.js"></script>-->
+    </body>
+</html>
