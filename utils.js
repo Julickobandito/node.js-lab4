@@ -50,5 +50,15 @@ const incrementId = function(entities) {
     return ++maxId;
 }
 
-export { capitalize, instantinateClass, findEntityById, incrementId };
+const filterByType = function(entities, type) {
+    let filtered_entities = []
+    entities.forEach((entity) => {
+        if (entity.type === type) {
+            filtered_entities.push(entity)
+        }
+    })
+   return filtered_entities
+}
+
+export { capitalize, instantinateClass, findEntityById, incrementId, filterByType };
 

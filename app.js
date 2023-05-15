@@ -2,7 +2,7 @@ import express from 'express';
 import methodOverride from 'method-override';
 import saveEntities from './save-entities.js';
 import fs from 'fs';
-import { instantinateClass, findEntityById, incrementId, capitalize } from './utils.js';
+import { instantinateClass, findEntityById, incrementId, filterByType, capitalize } from './utils.js';
 
 const entitiesFile = 'entities.json';
 const app = express();  //app is an instance of express object
@@ -29,38 +29,14 @@ app.get('/entities/list/:type', (req, res) => {
 
 app.get('/api/v1/entity', paginatedResults(entities), (req, res) => {
     const type = req.query.type;
-    let filtered_entities = [];
-    entities.forEach((entity) => {
-        if (entity.type === type) {
-            filtered_entities.push(entity);
-        }
-    })
-    /*
-    const page = parseInt(req.query.page);
-    const limit = parseInt(req.query.limit);
 
-    const startIndex = (page - 1) * limit;
-    let endIndex = page * limit;
-    if(endIndex > filtered_entities.length - 1){
-        endIndex = filtered_entities.length - 1;
-    }
-    let results = {};
-    if(!isNaN(page) && !isNaN(limit)){
-        filtered_entities = filtered_entities.slice(startIndex, endIndex);
-    }*/
-
-    let results = {
-        entities: filtered_entities,
-        pager: {page: 1, limit: 3}
-    }
-
-    // return res.status(404).json({ message: `` });
-    return res.status(200).json(results);
+    res.json(res.paginatedResults)
 })
 
 function paginatedResults(model) {
     // middleware function
     return (req, res, next) => {
+        model = filterByType(entities, req.query.type)
         const page = parseInt(req.query.page);
         const limit = parseInt(req.query.limit);
         // calculating the starting and ending index

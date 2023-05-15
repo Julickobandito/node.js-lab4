@@ -1,17 +1,57 @@
 (function(){
-    let type = null;
+    let type = null
+    let limit = 3
+
+    const getElemById = function(id) {
+        return document.getElementById(id)
+    }
 
     //render entities with js and adding them to "entities-list"
     const renderEntitiesList = function(data) {
-        let divList = document.getElementById("entities-list");
+        cleanEntityList()
 
-        data.entities.forEach(entity => {
-            divList.appendChild(renderEntityCard(entity));
+        let divList = getElemById("entities-list")
+
+        data.results.forEach(entity => {
+            divList.appendChild(renderEntityCard(entity))
         });
 
-        document.getElementById('apply').addEventListener('click', applyEntityDataHandler);
-        document.getElementById('reset').addEventListener('click', resetEntityDataHandler);
-        document.getElementById('delete').addEventListener('click', deleteEntityDataHandler);
+        refreshPaginator(data.previous, data.next)
+
+        getElemById('apply').addEventListener('click', applyEntityDataHandler)
+        getElemById('reset').addEventListener('click', resetEntityDataHandler)
+        getElemById('delete').addEventListener('click', deleteEntityDataHandler)
+    }
+
+    const refreshPaginator = function(prev, next) {
+        let paginator = document.getElementById('paginator')
+
+        const a_prev= getElemById("prev_but")
+        const a_next = getElemById("next_but")
+
+        if(prev) {
+            a_prev.style.display = "block"
+            a_prev.addEventListener('click', gotoPrevHandler, false)
+            a_prev.page_prev = prev.page
+        } else {
+            a_prev.style.display = 'none'
+        }
+        if(next) {
+            a_next.style.display = "block"
+            a_next.addEventListener('click', gotoNextHandler, false)
+            a_next.page_next = next.page
+        } else {
+            a_next.style.display = 'none'
+        }
+    }
+
+    const gotoPrevHandler = function(e) {
+        getEntityList(e.currentTarget.page_prev, limit)
+    }
+
+    const gotoNextHandler = function(e) {
+
+        getEntityList(e.currentTarget.page_next, limit)
     }
 
     //render entity with js considering different types
@@ -254,7 +294,9 @@
         return parseInt(document.getElementById('entity-id').value);
     }
 
-    //getting entity list by parameter value "type"
+    /**
+     * getting entity list by parameter value "type"
+     */
     const getEntityList = function(page, limit) {
         let matches = window.location.href.match(/.*\/(.*?)\#?$/); //receiving type from query
         if(matches) {
@@ -277,6 +319,6 @@
         }
     }
 
-    getEntityList(1,3);
+    getEntityList(1, limit);
     document.getElementById('create-button').addEventListener('click', clickCreateCardHandler);
 })();
