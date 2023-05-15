@@ -1,10 +1,6 @@
 import {Note, Task, Event} from './entities.js';
 
-const capitalize = function(word) {
-    const lower = word.toLowerCase();
-    return word.charAt(0).toUpperCase() + lower.slice(1);
-}
-
+//create a class instance from received object based on type of entity
 const instantinateClass = function(attributes) {
     let obj = null;
     switch(attributes.type) {
@@ -19,6 +15,12 @@ const instantinateClass = function(attributes) {
     }
     return obj;
 }
+
+const capitalize = function(word) {
+    const lower = word.toLowerCase();
+    return word.charAt(0).toUpperCase() + lower.slice(1);
+}
+
 
 const findEntityById = function (entities, id) {
     let found = null;

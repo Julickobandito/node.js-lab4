@@ -1,6 +1,5 @@
 import express from 'express';
 import methodOverride from 'method-override';
-import {Note, Task, Event} from './entities.js';  //importing the class note
 import saveEntities from './save-entities.js';
 import fs from 'fs';
 import { instantinateClass, findEntityById, incrementId, capitalize } from './utils.js';
@@ -9,12 +8,9 @@ const entitiesFile = 'entities.json';
 const app = express();  //app is an instance of express object
 
 app.set('view engine', 'ejs');  //set the view engine to EJS
-//method-override middleware for handling PUT and DELETE requests
-app.use(methodOverride('_method'));
 //making "public" folder a static folder
 app.use( express.static( "public" ));
-//a middleware for parsing the request body for the notes page route
-app.use(express.urlencoded({ extended: false }));
+//parse incoming request bodies
 app.use(express.json());
 
 //array for storing all the entities
@@ -24,58 +20,93 @@ app.get('/entities', (req, res) => {
     res.render('home');
 })
 
-app.get('/entities/new/:type', (req, res) => {
-    const type = req.params.type;
-    let obj = instantinateClass({type: type});
-    let attributes = obj.getAttributes();
-    let attributes_names = obj.getAttributesJSON();
-    res.render('entity-create', { type, attributes, attributes_names});
-});
-
 app.get('/entities/list/:type', (req, res) => {
     const type = req.params.type;
+    let filtered_entities = [];
+    let typeName = capitalize(type);
+    res.render('entities', { filtered_entities, type, typeName });
+});
+
+app.get('/api/v1/entity', paginatedResults(entities), (req, res) => {
+    const type = req.query.type;
     let filtered_entities = [];
     entities.forEach((entity) => {
         if (entity.type === type) {
             filtered_entities.push(entity);
         }
     })
-    let typeName = capitalize(type);
-    res.render('entities', {filtered_entities, type, typeName });
-});
+    /*
+    const page = parseInt(req.query.page);
+    const limit = parseInt(req.query.limit);
 
-app.get('/entities/:id', (req, res) => {
+    const startIndex = (page - 1) * limit;
+    let endIndex = page * limit;
+    if(endIndex > filtered_entities.length - 1){
+        endIndex = filtered_entities.length - 1;
+    }
+    let results = {};
+    if(!isNaN(page) && !isNaN(limit)){
+        filtered_entities = filtered_entities.slice(startIndex, endIndex);
+    }*/
+
+    let results = {
+        entities: filtered_entities,
+        pager: {page: 1, limit: 3}
+    }
+
+    // return res.status(404).json({ message: `` });
+    return res.status(200).json(results);
+})
+
+function paginatedResults(model) {
+    // middleware function
+    return (req, res, next) => {
+        const page = parseInt(req.query.page);
+        const limit = parseInt(req.query.limit);
+        // calculating the starting and ending index
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+        const results = {};
+        if (endIndex < model.length) {
+            results.next = {
+                page: page + 1,
+                limit: limit
+            };
+        }
+        if (startIndex > 0) {
+            results.previous = {
+                page: page - 1,
+                limit: limit
+            };
+        }
+        results.results = model.slice(startIndex, endIndex);
+        res.paginatedResults = results;
+        next();
+    };
+}
+
+//a route for getting an existing entity
+app.get('/api/v1/entity/:id', (req, res) => {
     const { id } = req.params;
     let [entity, index] = findEntityById(entities, id);
     let obj = instantinateClass(entity); // {type: entity.type}
     let attributes = obj.getAttributes();
-    let attributes_names = '{';
-    let sep = '';
-    attributes.forEach((attribute) => {
-        attributes_names += sep + attribute.name + ':' + (typeof entity[attribute.name] == 'undefined' ? null : '"' + entity[attribute.name] + '"');
-        sep = ',';
-    });
-    attributes_names += '}';
-    res.render('entity-form', { entity, attributes, attributes_names, noteIndex: id });
+    res.json({entity, attributes,  noteIndex: id});
+
 });
 
-
-app.get('/api/v1/entities', (req, res) => {
-    // filter entities by type
-    res.status(200).json(entities);
+//a route for creating a new entity
+app.get('/api/v1/entity/new/:type', (req, res) => {
+    const type = req.params.type;
+    const id = incrementId(entities);
+    let entity = instantinateClass({type: type, id: id});
+    let attributes = entity.getAttributes();
+    let attributes_names = entity.getAttributesJSON();
+    res.json({ type, entity, attributes, attributes_names });
 });
 
-app.get('/api/v1/entities/:id', (req, res) => {
-    const id = parseInt(req.params.id);
-    const entity = entities[id];
-    if (!entity) {
-        return res.status(404).json({ message: `Note with ID ${id} not found` });
-    }
-    res.json(entity); // send the note data as JSON response
-});
-
-//create a route to handle the form submission for creating a new note
-app.post('/api/v1/entities', (req, res) => {
+//a route for posting new entity
+app.post('/api/v1/entity/:id', (req, res) => {
     const attributes = req.body;
     // Validate that title and description are present in request body
     if (!attributes.title || !attributes.content) {
@@ -88,8 +119,8 @@ app.post('/api/v1/entities', (req, res) => {
     res.status(201).json(entity);
 });
 
-//create a route to handle updating an existing note
-app.put('/api/v1/entities/:id', (req, res) => {
+//a route for updating an existing entity
+app.put('/api/v1/entity/:id', (req, res) => {
     const { id } = req.params;
     const attributes = req.body;
     if (!id) {
@@ -119,7 +150,7 @@ app.delete('/api/v1/entities/:id', (req, res) => {
     res.status(200).json({ message: `Note with ID ${id} deleted` });
 });
 
-//entities = readEntities(entitiesFile, entities);
+//loading objects from file
 fs.readFile(entitiesFile, 'utf8', (err, data) => {
     if (err) {
         if(err.errno === -4058 ) {
@@ -139,7 +170,6 @@ fs.readFile(entitiesFile, 'utf8', (err, data) => {
         console.log(`Loaded ${entities.length} notes from file`);
     }
 });
-
 
 //start the server
 app.listen(3000, () => console.log('Server running on port 3000'));

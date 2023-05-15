@@ -36,6 +36,8 @@ ul li {
 .note-title {
     font-size: 24px;
     font-weight: 700;
+    border-bottom: 2px solid #ccc;
+    text-align: center;
 }
 .note {
     text-decoration: none;
@@ -117,6 +119,7 @@ ul li {
 }
 
 .date {
+    margin-top: 0;
     font-style: italic;
 }
 
@@ -171,4 +174,25 @@ label {
 
 .dueDate {
     font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+#entity-editor {
+    display: none;
+}
+.changes {
+    width: 150px;
+    height: 40px;
+    color: #9141c5;
+    font-weight: 800;
+    border: 1px solid bisque;
+    background: #ffd29c;
+    cursor: pointer;
+    border-radius: 3px;
+    margin-top: 20px;
+}
+
+.additional {
+    margin-top: 0;
 }

@@ -1,12 +1,9 @@
-//class definitions for entities
-import { incrementId } from "./utils.js";
-
 class Entity {
     constructor(attributes) {
         this.id = attributes.id ? parseInt(attributes.id) : 1;
         this.type = attributes.type;
-        this.title = attributes.title;
-        this.content = attributes.content;
+        this.title = attributes.title ? attributes.title : '';
+        this.content = attributes.content ? attributes.content : '';
 
         this.date  = new Date().toLocaleDateString('en-US', {
             month: 'short',
@@ -20,37 +17,27 @@ class Entity {
         });
 
     }
+    //attributes for handling data from forms
     getAttributes() {
         return [
             {name: "id", tag: "input", attributes: {type: "hidden", value: this.id}},
             {name: "title", tag: "input", attributes: {type: "text"}},
             {name: "content", tag: "textarea", attributes: {}},
-            // {date: {tag:"input", attributes: [{type: "date"}]}}
         ]
     }
+
+    //receiving attributes for entity
     getAttributesJSON() {
-        // let obj = instantinateClass({type: entity.type});
         let attributes = this.getAttributes();
         let attributes_names = '{';
         let sep = '';
         attributes.forEach((attribute) => {
-            attributes_names += sep + attribute.name + ':' + (attribute.name === 'type' ? '"' + this.type + '"' : null); // (typeof this.name == 'undefined' ? null : '"' + this.name + '"');
+            attributes_names += sep + attribute.name + ':' + (attribute.name === 'type' ? '"' + this.type + '"' : null);
             sep = ',';
         });
         return attributes_names + '}';
     }
-    updateDateTime() {
-        this.date = new Date().toLocaleString('en-US', {
-            month: 'short',
-            day: '2-digit',
-            year: 'numeric'
-        });
-        this.time = new Date().toLocaleTimeString('en-US', {
-            hour12: true,
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-    }
+
 }
 class Note extends Entity {
     constructor(attributes) {
@@ -67,7 +54,7 @@ class Task extends Entity {
     constructor(attributes) {
         super(attributes);
         this.type = 'task';
-        this.dueDate = attributes.dueDate;
+        this.dueDate = attributes.dueDate ? attributes.dueDate : null;
         this.isCompleted = attributes.isCompleted;
     }
     getAttributes() {
@@ -82,7 +69,7 @@ class Event extends Entity {
     constructor(attributes) {
         super(attributes);
         this.type = 'event';
-        this.eventDate = attributes.eventDate;
+        this.eventDate = attributes.eventDate ? attributes.eventDate : null;
     }
     getAttributes() {
         let attributes = super.getAttributes();
