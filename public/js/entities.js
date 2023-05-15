@@ -256,7 +256,7 @@
         .then(() => {
             hideEditor();
             cleanEntityList();
-            getEntityList();
+            getEntityList(1, limit);
         })
         .catch(error => {
             console.log('Error:' + error);
@@ -282,7 +282,7 @@
             console.log(data);
             // redirect to notes page
             cleanEntityList();
-            getEntityList();
+            getEntityList(1, limit);
         })
         .catch((error) => {
             console.log(error);
