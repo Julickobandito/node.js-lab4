@@ -159,7 +159,7 @@ ul li {
 }
 
 .btns {
-    width: 100px;
+    width: 250px;
     align-items: stretch;
 }
 
@@ -195,4 +195,14 @@ label {
 
 .additional {
     margin-top: 0;
+}
+
+.arrow {
+    width: 50px;
+}
+
+.arrows {
+    width: 110px;
+    display: flex;
+    justify-content: space-between;
 }
