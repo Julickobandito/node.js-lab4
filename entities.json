@@ -1,1 +1,137 @@
-[{"id":1,"type":"event","title":"note","content":"dfgdgf","date":"May 08, 2023","time":"08:34 PM","eventDate":"2024-07-11"},{"id":5,"type":"note","title":"not12","content":"some","date":"May 06, 2023","time":"09:40 AM"},{"id":6,"type":"event","title":"eve3","content":"some23fdhfh assfd","date":"May 15, 2023","time":"05:17 PM","eventDate":"2023-12-14"},{"id":7,"type":"task","title":"tsk34","content":"tsk3","date":"May 15, 2023","time":"10:21 PM","dueDate":"2023-05-04","isCompleted":true},{"id":11,"type":"task","title":"tsk4","content":"dfdsfsdkkkkkkkkkk dkvjhds kdsjhdslkjds dslidjsf","date":"May 15, 2023","time":"10:17 PM","dueDate":"2023-05-12","isCompleted":false},{"id":12,"type":"task","title":"tsk5","content":"tsk4","date":"May 15, 2023","time":"08:13 PM","dueDate":"2023-05-09","isCompleted":false},{"id":13,"type":"event","title":"bbvv","content":"fdfdf","date":"May 06, 2023","time":"09:40 AM","eventDate":"2023-05-21"},{"id":14,"type":"event","title":"xzczxc dsf sdjk dflkj","content":"cscsdvdv sxkjhdsjh dslfkjsdflkjdsf osidfjsdkf asdkjsa d;kjsadkjsda sadlkjds asdlkjsda saldkjsd saldkj dsaссв","date":"May 08, 2023","time":"09:38 PM","eventDate":"2024-05-24"},{"id":15,"type":"task","title":"tsk1","content":"tsk1","date":"May 15, 2023","time":"08:12 PM","dueDate":"2023-05-20","isCompleted":false},{"id":16,"type":"task","title":"tsk2","content":"tsk22","date":"May 15, 2023","time":"10:21 PM","dueDate":"2023-05-17","isCompleted":false},{"id":17,"type":"task","title":"tsk6","content":"tsk6 qwerty","date":"May 15, 2023","time":"10:14 PM","dueDate":"2023-05-18","isCompleted":false},{"id":18,"type":"task","title":"tsk72","content":"tsk7","date":"May 15, 2023","time":"10:21 PM","dueDate":"2023-05-20","isCompleted":false},{"id":19,"type":"task","title":"tsk8","content":"tsk8","date":"May 15, 2023","time":"08:14 PM","dueDate":"2023-05-19","isCompleted":false},{"id":20,"type":"task","title":"аааа","content":"ааааа","date":"May 15, 2023","time":"10:38 PM","dueDate":"2023-05-11","isCompleted":false}]
+[
+  {
+    "id": 1,
+    "type": "event",
+    "title": "note",
+    "content": "dfgdgf",
+    "date": "May 08, 2023",
+    "time": "08:34 PM",
+    "eventDate": "2024-07-11"
+  },
+  {
+    "id": 5,
+    "type": "note",
+    "title": "not12",
+    "content": "some",
+    "date": "May 06, 2023",
+    "time": "09:40 AM"
+  },
+  {
+    "id": 6,
+    "type": "event",
+    "title": "eve3",
+    "content": "some23fdhfh assfd",
+    "date": "May 15, 2023",
+    "time": "05:17 PM",
+    "eventDate": "2023-12-14"
+  },
+  {
+    "id": 7,
+    "type": "task",
+    "title": "tsk34",
+    "content": "tsk3",
+    "date": "May 15, 2023",
+    "time": "10:21 PM",
+    "dueDate": "2023-05-04",
+    "isCompleted": true
+  },
+  {
+    "id": 11,
+    "type": "task",
+    "title": "tsk4",
+    "content": "dfdsfsdkkkkkkkkkk dkvjhds kdsjhdslkjds dslidjsf",
+    "date": "May 15, 2023",
+    "time": "10:17 PM",
+    "dueDate": "2023-05-12",
+    "isCompleted": false
+  },
+  {
+    "id": 12,
+    "type": "task",
+    "title": "tsk5",
+    "content": "tsk4",
+    "date": "May 15, 2023",
+    "time": "08:13 PM",
+    "dueDate": "2023-05-09",
+    "isCompleted": false
+  },
+  {
+    "id": 13,
+    "type": "event",
+    "title": "bbvv",
+    "content": "fdfdf",
+    "date": "May 06, 2023",
+    "time": "09:40 AM",
+    "eventDate": "2023-05-21"
+  },
+  {
+    "id": 14,
+    "type": "event",
+    "title": "xzczxc dsf sdjk dflkj",
+    "content": "cscsdvdv sxkjhdsjh dslfkjsdflkjdsf osidfjsdkf asdkjsa d;kjsadkjsda sadlkjds asdlkjsda saldkjsd saldkj dsaссв",
+    "date": "May 08, 2023",
+    "time": "09:38 PM",
+    "eventDate": "2024-05-24"
+  },
+  {
+    "id": 15,
+    "type": "task",
+    "title": "tsk1",
+    "content": "tsk1",
+    "date": "May 15, 2023",
+    "time": "08:12 PM",
+    "dueDate": "2023-05-20",
+    "isCompleted": false
+  },
+  {
+    "id": 16,
+    "type": "task",
+    "title": "tsk2",
+    "content": "tsk22",
+    "date": "May 15, 2023",
+    "time": "10:21 PM",
+    "dueDate": "2023-05-17",
+    "isCompleted": false
+  },
+  {
+    "id": 17,
+    "type": "task",
+    "title": "tsk6",
+    "content": "tsk6 qwerty",
+    "date": "May 15, 2023",
+    "time": "10:14 PM",
+    "dueDate": "2023-05-18",
+    "isCompleted": false
+  },
+  {
+    "id": 18,
+    "type": "task",
+    "title": "tsk72",
+    "content": "tsk7",
+    "date": "May 15, 2023",
+    "time": "10:21 PM",
+    "dueDate": "2023-05-20",
+    "isCompleted": false
+  },
+  {
+    "id": 19,
+    "type": "task",
+    "title": "tsk8",
+    "content": "tsk8",
+    "date": "May 15, 2023",
+    "time": "08:14 PM",
+    "dueDate": "2023-05-19",
+    "isCompleted": false
+  },
+  {
+    "id": 20,
+    "type": "task",
+    "title": "аааа",
+    "content": "ааааа",
+    "date": "May 15, 2023",
+    "time": "10:38 PM",
+    "dueDate": "2023-05-11",
+    "isCompleted": false
+  }
+]
+

@@ -3,6 +3,7 @@ import methodOverride from 'method-override';
 import saveEntities from './save-entities.js';
 import fs from 'fs';
 import { instantinateClass, findEntityById, incrementId, filterByType, capitalize } from './utils.js';
+import { getEntityList, getEntityById} from "./api.js";
 
 const entitiesFile = 'entities.json';
 const app = express();  //app is an instance of express object
@@ -28,8 +29,9 @@ app.get('/entities/list/:type', (req, res) => {
 });
 
 app.get('/api/v1/entity', paginatedResults(entities), (req, res) => {
+    //req.entities = entities
+    //getEntityList(req, res)
     const type = req.query.type;
-
     res.json(res.paginatedResults)
 })
 
@@ -63,12 +65,7 @@ function paginatedResults(model) {
 
 //a route for getting an existing entity
 app.get('/api/v1/entity/:id', (req, res) => {
-    const { id } = req.params;
-    let [entity, index] = findEntityById(entities, id);
-    let obj = instantinateClass(entity); // {type: entity.type}
-    let attributes = obj.getAttributes();
-    res.json({entity, attributes,  noteIndex: id});
-
+    getEntityById(entities, req, res)
 });
 
 //a route for creating a new entity
