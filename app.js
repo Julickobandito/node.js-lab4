@@ -1,9 +1,15 @@
 import express from 'express';
-import methodOverride from 'method-override';
 import saveEntities from './save-entities.js';
+import bodyParser from 'body-parser';
 import fs from 'fs';
 import { instantinateClass, findEntityById, incrementId, filterByType, capitalize } from './utils.js';
-import { getEntityList, getEntityById} from "./api.js";
+
+import swaggerUi from 'swagger-ui-express';
+// import {swaggerDocument} from './swagger.json';
+
+import { createRequire } from 'node:module';
+const require = createRequire(import.meta.url);
+const swaggerDocument = require("./swagger.json");
 
 const entitiesFile = 'entities.json';
 const app = express();  //app is an instance of express object
@@ -13,7 +19,8 @@ app.set('view engine', 'ejs');  //set the view engine to EJS
 app.use( express.static( "public" ));
 //parse incoming request bodies
 app.use(express.json());
-
+app.use(bodyParser.json());
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 //array for storing all the entities
 let entities = [];
 
@@ -29,8 +36,6 @@ app.get('/entities/list/:type', (req, res) => {
 });
 
 app.get('/api/v1/entity', paginatedResults(entities), (req, res) => {
-    //req.entities = entities
-    //getEntityList(req, res)
     const type = req.query.type;
     res.json(res.paginatedResults)
 })
@@ -65,7 +70,11 @@ function paginatedResults(model) {
 
 //a route for getting an existing entity
 app.get('/api/v1/entity/:id', (req, res) => {
-    getEntityById(entities, req, res)
+    const { id } = req.params;
+    let [entity, index] = findEntityById(entities, id);
+    let obj = instantinateClass(entity); // {type: entity.type}
+    let attributes = obj.getAttributes();
+    res.json({entity, attributes,  noteIndex: id});
 });
 
 //a route for creating a new entity
