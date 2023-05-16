@@ -10,21 +10,16 @@
             <div class="flex">
                 <h1 class="section-title"><%= typeName %>s</h1>
                 <div class="flex btns">
-                    <div class="arrows">
-                        <a href="#"><img class="arrow" src="/images/prev.png" alt="prev"></a>
-                        <a href="#"><img class="arrow" src="/images/next.png" alt="next"></a>
+                    <div id="paginator" class="arrows">
+                        <a id="prev_but" href="#"><img class="arrow" src="/images/prev.png" alt="prev"></a>
+                        <div> </div>
+                        <a id="next_but" href="#"><img class="arrow" src="/images/next.png" alt="next"></a>
                     </div>
                     <a href="/entities"><img class="home-btn" src="/images/home.png" alt="share"></a>
                     <a id="create-button" class="create-button" href="#">
                         <img class="create-img" src="/images/writing.png" alt="create">
                     </a>
                 </div>
-            </div>
-
-            <div id="paginator" class="flex">
-                <a id="prev_but" href="#">&lt;-</a>
-                <div> </div>
-                <a id="next_but" href="#">-&gt;</a>
             </div>
 
             <div id="entities-list" class="flex"></div>
