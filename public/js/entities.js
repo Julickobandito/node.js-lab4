@@ -50,7 +50,6 @@
     }
 
     const gotoNextHandler = function(e) {
-
         getEntityList(e.currentTarget.page_next, limit)
     }
 
@@ -268,7 +267,7 @@
     }
 
     //deleting entity by id
-    const deleteEntityDataHandler = function() {
+    const  deleteEntityDataHandler = function() {
         const entityId = getEntityId();
         fetch('/api/v1/entities/'+entityId, {
             method: 'DELETE',

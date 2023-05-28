@@ -2,14 +2,17 @@ import express from 'express';
 import saveEntities from './save-entities.js';
 import bodyParser from 'body-parser';
 import fs from 'fs';
-import { instantinateClass, findEntityById, incrementId, filterByType, capitalize } from './utils.js';
+import { 
+    instantinateClass, 
+    findEntityById, 
+    incrementId, 
+    filterByType, 
+    capitalize } from './utils.js';
+import swaggerDocs from './swagger.js'
 
-import swaggerUi from 'swagger-ui-express';
-// import {swaggerDocument} from './swagger.json';
 
 import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
-const swaggerDocument = require("./swagger.json");
 
 const entitiesFile = 'entities.json';
 const app = express();  //app is an instance of express object
@@ -20,7 +23,6 @@ app.use( express.static( "public" ));
 //parse incoming request bodies
 app.use(express.json());
 app.use(bodyParser.json());
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 //array for storing all the entities
 let entities = [];
 
@@ -35,11 +37,78 @@ app.get('/entities/list/:type', (req, res) => {
     res.render('entities', { filtered_entities, type, typeName });
 });
 
+/**
+ * @openapi
+ * '/api/v1/entity':
+ *  get:
+ *     tags:
+ *     - Entity
+ *     summary: Get all entities
+ *     parameters:
+ *       - in: query
+ *         name: type
+ *         schema:
+ *           type: string
+ *           default: task
+ *         required: true
+ *         description: String Type of an entity for display
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         required: false
+ *         description: Number of page to display
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 3
+ *         required: false
+ *         description: Limit of entities to display
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *          application/json:
+ *            schema:
+ *              type: array
+ *              items:
+ *                type: object
+ *                properties:
+ *                  id:
+ *                    type: integer
+ *                    default: 0
+ *                  type:
+ *                    type: string
+ *                    default: task
+ *                  title:
+ *                    type: string
+ *                    default: Do it NOW!
+ *                  content:
+ *                    type: string
+ *                    default: just a kind reminder :)
+ *                  date:
+ *                    type: string
+ *                    default: May 08, 2023
+ *                  time:
+ *                    type: string
+ *                    default: 12:49 AM
+ *                  dueDate:
+ *                    type: string
+ *                    default: 2023-05-09
+ *                  isCompleted:
+ *                    type: boolean
+ *                    default: false
+ *       400:
+ *         description: Bad request
+ */
 app.get('/api/v1/entity', paginatedResults(entities), (req, res) => {
     const type = req.query.type;
     res.json(res.paginatedResults)
 })
 
+//pagination
 function paginatedResults(model) {
     // middleware function
     return (req, res, next) => {
@@ -68,7 +137,56 @@ function paginatedResults(model) {
     };
 }
 
-//a route for getting an existing entity
+/**
+ * @openapi
+ * '/api/v1/entity/{id}':
+ *  get:
+ *     tags:
+ *     - Entity
+ *     summary: Return an object with specific id
+ *     parameters:
+ *      - name: type
+ *        in: path
+ *        description: The type of the entity
+ *        required: true
+ *        schema:
+ *          type: string
+ *          deafult: task/event/note
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                id:
+ *                  type: integer
+ *                  default: 0
+ *                type:
+ *                  type: string
+ *                  default: task
+ *                title:
+ *                  type: string
+ *                  default: Do it NOW!
+ *                content:
+ *                  type: string
+ *                  default: just a kind reminder :)
+ *                date:
+ *                  type: string
+ *                  default: May 08, 2023
+ *                time:
+ *                  type: string
+ *                  default: 12:49 AM
+ *                dueDate:
+ *                  type: string
+ *                  default: 2023-05-09
+ *                isCompleted:
+ *                  type: boolean
+ *                  default: false
+ *       400:
+ *         description: Bad request
+ */
 app.get('/api/v1/entity/:id', (req, res) => {
     const { id } = req.params;
     let [entity, index] = findEntityById(entities, id);
@@ -77,7 +195,56 @@ app.get('/api/v1/entity/:id', (req, res) => {
     res.json({entity, attributes,  noteIndex: id});
 });
 
-//a route for creating a new entity
+/**
+ * @openapi
+ * '/api/v1/entity/new/{type}':
+ *  get:
+ *     tags:
+ *     - Entity
+ *     summary: Create new instance of an object
+ *     parameters:
+ *      - name: type
+ *        in: path
+ *        description: The type of the entity
+ *        required: true
+ *        schema:
+ *          type: string
+ *          deafult: task/event/note
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                id:
+ *                  type: integer
+ *                  default: 0
+ *                type:
+ *                  type: string
+ *                  default: task
+ *                title:
+ *                  type: string
+ *                  default: Do it NOW!
+ *                content:
+ *                  type: string
+ *                  default: just a kind reminder :)
+ *                date:
+ *                  type: string
+ *                  default: May 08, 2023
+ *                time:
+ *                  type: string
+ *                  default: 12:49 AM
+ *                dueDate:
+ *                  type: string
+ *                  default: 2023-05-09
+ *                isCompleted:
+ *                  type: boolean
+ *                  default: false
+ *       400:
+ *         description: Bad request
+ */
 app.get('/api/v1/entity/new/:type', (req, res) => {
     const type = req.params.type;
     const id = incrementId(entities);
@@ -87,7 +254,85 @@ app.get('/api/v1/entity/new/:type', (req, res) => {
     res.json({ type, entity, attributes, attributes_names });
 });
 
-//a route for posting new entity
+/**
+ * @openapi
+ * '/api/v1/entity/{id}':
+ *  post:
+ *     tags:
+ *     - Entity
+ *     summary: Add an instance oа specific object with generated id
+ *     parameters:
+ *      - name: id
+ *        in: path
+ *        description: The unique id of the entity
+ *        required: true
+ *     requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *           schema:
+ *            type: object
+ *            required:
+ *              - id
+ *              - type
+ *              - title
+ *              - content
+ *              - date
+ *              - time
+ *            properties:
+ *              id:
+ *                type: integer
+ *                default: 2
+ *              type:
+ *                type: string
+ *                default: task
+ *              title:
+ *                type: string
+ *                default: Some Title
+ *              content:
+ *                type: string
+ *                default: Some Description
+ *              date:
+ *                type: string
+ *                default: May 08, 2023
+ *              time:
+ *                type: string
+ *                default: 12:49 AM
+ *     responses:
+ *      201:
+ *        description: Created
+ *        content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: integer
+ *                 default: 0
+ *               type:
+ *                 type: string
+ *                 default: task
+ *               title:
+ *                 type: string
+ *                 default: Do it NOW!
+ *               content:
+ *                 type: string
+ *                 default: just a kind reminder :)
+ *               date:
+ *                 type: string
+ *                 default: May 08, 2023
+ *               time:
+ *                 type: string
+ *                 default: 12:49 AM
+ *               dueDate:
+ *                 type: string
+ *                 default: 2023-05-09
+ *               isCompleted:
+ *                 type: boolean
+ *                 default: false
+ *      400:
+ *        description: Title and description are required
+ */
 app.post('/api/v1/entity/:id', (req, res) => {
     const attributes = req.body;
     // Validate that title and description are present in request body
@@ -101,7 +346,87 @@ app.post('/api/v1/entity/:id', (req, res) => {
     res.status(201).json(entity);
 });
 
-//a route for updating an existing entity
+/**
+ * @openapi
+ * '/api/v1/entity/{id}':
+ *  put:
+ *     tags:
+ *     - Entity
+ *     summary: Modify a specific object by id
+ *     parameters:
+ *      - name: id
+ *        in: path
+ *        description: The unique id of the entity
+ *        required: true
+ *     requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *           schema:
+ *            type: object
+ *            required:
+ *              - id
+ *              - type
+ *              - title
+ *              - content
+ *              - date
+ *              - time
+ *            properties:
+ *              id:
+ *                type: integer
+ *                default: 2
+ *              type:
+ *                type: string
+ *                default: task
+ *              title:
+ *                type: string
+ *                default: Some Title
+ *              content:
+ *                type: string
+ *                default: Some Description
+ *              date:
+ *                type: string
+ *                default: May 08, 2023
+ *              time:
+ *                type: string
+ *                default: 12:49 AM
+ *     responses:
+ *      200:
+ *        description: Success
+ *        content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: integer
+ *                 default: 0
+ *               type:
+ *                 type: string
+ *                 default: task
+ *               title:
+ *                 type: string
+ *                 default: Do it NOW!
+ *               content:
+ *                 type: string
+ *                 default: just a kind reminder :)
+ *               date:
+ *                 type: string
+ *                 default: May 08, 2023
+ *               time:
+ *                 type: string
+ *                 default: 12:49 AM
+ *               dueDate:
+ *                 type: string
+ *                 default: 2023-05-09
+ *               isCompleted:
+ *                 type: boolean
+ *                 default: false
+ *      400:
+ *        description: Title and description are required
+ *      404:
+ *        description: Not found
+ */
 app.put('/api/v1/entity/:id', (req, res) => {
     const { id } = req.params;
     const attributes = req.body;
@@ -112,6 +437,9 @@ app.put('/api/v1/entity/:id', (req, res) => {
     if (!attributes.title || !attributes.content) {
         return res.status(400).json({ message: 'Title and content are required' });
     }
+    if (attributes.type === 'event' && !attributes.eventDate || attributes.type === 'task' && !attributes.dueDate) {
+        return res.status(400).json({ message: 'Date required' });
+    }
     let entityId = parseInt(id);
     let [entity, index] = findEntityById(entities, entityId);
     attributes.type = entity.type;
@@ -120,7 +448,24 @@ app.put('/api/v1/entity/:id', (req, res) => {
     res.status(200).json(entities[index]);
 });
 
-//create a route to handle deleting a note
+/**
+ * @openapi
+ * '/api/v1/entity/{id}':
+ *  delete:
+ *     tags:
+ *     - Entity
+ *     summary: Remove Entity by id
+ *     parameters:
+ *      - name: id
+ *        in: path
+ *        description: The unique id of the entity
+ *        required: true
+ *     responses:
+ *      200:
+ *        description: Note with ID {id} deleted
+ *      404:
+ *        description: Note with ID {id} not found
+ */
 app.delete('/api/v1/entities/:id', (req, res) => {
     const { id } = req.params;
     if (!id || id === undefined) {
@@ -153,5 +498,10 @@ fs.readFile(entitiesFile, 'utf8', (err, data) => {
     }
 });
 
+const port = 3000
+
 //start the server
-app.listen(3000, () => console.log('Server running on port 3000'));
+app.listen(port, () => {
+    console.log('Server running on port 3000');
+    swaggerDocs(app, port)
+});
